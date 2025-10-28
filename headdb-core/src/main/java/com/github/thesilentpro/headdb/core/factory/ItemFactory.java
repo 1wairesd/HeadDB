@@ -1,7 +1,15 @@
 package com.github.thesilentpro.headdb.core.factory;
 
-import com.github.thesilentpro.headdb.api.model.Head;
-import net.kyori.adventure.text.Component;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -9,8 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.ApiStatus;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import com.github.thesilentpro.headdb.api.model.Head;
+
+import net.kyori.adventure.text.Component;
 
 /**
  * Represents an item factory for per server implementation creation of ItemStacks.
@@ -35,7 +44,7 @@ public interface ItemFactory {
 
     ItemStack newItem(Material material, Component name, Component... lore);
 
-    default void giveItem(Player player, Collection<Integer> omit, ItemStack... items) {
+    default void giveItem(Player player, Collection<Integer> omit, boolean dropOnFullInventory, ItemStack... items) {
         // Use a HashSet for O(1) lookups if omit is not null and not empty
         Set<Integer> omitSet = (omit != null && !omit.isEmpty()) ? (omit instanceof Set ? (Set<Integer>) omit : new HashSet<>(omit)) : null;
 
@@ -68,19 +77,23 @@ public interface ItemFactory {
             }
         }
 
-        Map<Integer, ItemStack> leftovers = player.getInventory().addItem(items);
-        for (ItemStack missed : leftovers.values()) {
-            int leftover = missed.getAmount();
-            final int maxStack = missed.getMaxStackSize();
+        if (dropOnFullInventory) {
+            Map<Integer, ItemStack> leftovers = player.getInventory().addItem(items);
+            for (ItemStack missed : leftovers.values()) {
+                int leftover = missed.getAmount();
+                final int maxStack = missed.getMaxStackSize();
 
-            // Drop items in maxStack-size chunks efficiently
-            while (leftover > 0) {
-                int dropAmount = (leftover > maxStack) ? maxStack : leftover;
-                ItemStack toDrop = missed.clone();
-                toDrop.setAmount(dropAmount);
-                player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
-                leftover -= dropAmount;
+                // Drop items in maxStack-size chunks efficiently
+                while (leftover > 0) {
+                    int dropAmount = (leftover > maxStack) ? maxStack : leftover;
+                    ItemStack toDrop = missed.clone();
+                    toDrop.setAmount(dropAmount);
+                    player.getWorld().dropItemNaturally(player.getLocation(), toDrop);
+                    leftover -= dropAmount;
+                }
             }
+        } else {
+            player.getInventory().addItem(items);
         }
     }
 

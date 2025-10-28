@@ -1,11 +1,12 @@
 package com.github.thesilentpro.headdb.core.config;
 
-import com.github.thesilentpro.headdb.api.model.Head;
-import com.github.thesilentpro.headdb.core.HeadDB;
-import com.github.thesilentpro.headdb.core.util.Compatibility;
-import com.github.thesilentpro.headdb.implementation.Index;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,8 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.*;
+import com.github.thesilentpro.headdb.api.model.Head;
+import com.github.thesilentpro.headdb.core.HeadDB;
+import com.github.thesilentpro.headdb.core.util.Compatibility;
+import com.github.thesilentpro.headdb.implementation.Index;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class Config {
 
@@ -38,6 +44,7 @@ public class Config {
     private boolean preloadHeads, trackPage, updaterEnabled;
     private int maxBuyAmount;
     private List<Integer> omit;
+    private boolean dropOnFullInventory;
 
     // Indexing
     private boolean indexingEnabled, indexById, indexByTexture, indexByCategory, indexByTag;
@@ -82,6 +89,7 @@ public class Config {
         apiThreads = config.getInt("database.apiThreads", 1);
         maxBuyAmount = config.getInt("maxBuyAmount", 2304);
         omit = config.getIntegerList("head.omit");
+        dropOnFullInventory = config.getBoolean("head.dropOnFullInventory", true);
 
         LOGGER.trace("Loaded General Config:");
         LOGGER.trace(" - playerStorageSaveInterval = {}", playerStorageSaveInterval);
@@ -91,6 +99,7 @@ public class Config {
         LOGGER.trace(" - databaseThreads = {}", databaseThreads);
         LOGGER.trace(" - apiThreads = {}", apiThreads);
         LOGGER.trace(" - maxBuyAmount = {}", maxBuyAmount);
+        LOGGER.trace(" - dropOnFullInventory = {}", dropOnFullInventory);
     }
 
     private void loadIndexing() {
@@ -308,6 +317,7 @@ public class Config {
     public int getApiThreads() { return apiThreads; }
     public int getMaxBuyAmount() { return maxBuyAmount; }
     public List<Integer> getOmit() { return omit; }
+    public boolean isDropOnFullInventory() { return dropOnFullInventory; }
 
     public boolean isTrackPage() { return trackPage; }
     public boolean isPreloadHeads() { return preloadHeads; }

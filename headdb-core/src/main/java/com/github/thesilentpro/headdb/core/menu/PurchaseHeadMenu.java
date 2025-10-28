@@ -1,5 +1,12 @@
 package com.github.thesilentpro.headdb.core.menu;
 
+import java.util.Locale;
+import java.util.function.Consumer;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.github.thesilentpro.grim.button.SimpleButton;
 import com.github.thesilentpro.grim.page.Page;
 import com.github.thesilentpro.grim.page.SimplePage;
@@ -9,14 +16,9 @@ import com.github.thesilentpro.headdb.core.HeadDB;
 import com.github.thesilentpro.headdb.core.factory.ItemFactoryRegistry;
 import com.github.thesilentpro.headdb.core.util.Compatibility;
 import com.github.thesilentpro.inputs.paper.PaperInput;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Locale;
-import java.util.function.Consumer;
 
 public class PurchaseHeadMenu extends SimplePage {
 
@@ -93,7 +95,7 @@ public class PurchaseHeadMenu extends SimplePage {
 
                 ItemStack item = head.getItem();
                 item.setAmount(amount);
-                ItemFactoryRegistry.get().giveItem((Player) ctx.event().getWhoClicked(), plugin.getCfg().getOmit(), item);
+                ItemFactoryRegistry.get().giveItem((Player) ctx.event().getWhoClicked(), plugin.getCfg().getOmit(), plugin.getCfg().isDropOnFullInventory(), item);
                 plugin.getLocalization().sendMessage(ctx.event().getWhoClicked(), "purchase.success", msg ->
                         msg.replaceText(builder -> builder.matchLiteral("{amount}").replacement(String.valueOf(amount)))
                                 .replaceText(builder -> builder.matchLiteral("{name}").replacement(head.getName()))

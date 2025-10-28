@@ -1,5 +1,12 @@
 package com.github.thesilentpro.headdb.core.menu;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+
 import com.github.thesilentpro.grim.button.SimpleButton;
 import com.github.thesilentpro.grim.gui.GUI;
 import com.github.thesilentpro.grim.page.PaginatedSimplePage;
@@ -8,13 +15,8 @@ import com.github.thesilentpro.headdb.core.HeadDB;
 import com.github.thesilentpro.headdb.core.factory.ItemFactoryRegistry;
 import com.github.thesilentpro.headdb.core.storage.PlayerData;
 import com.github.thesilentpro.headdb.core.util.Compatibility;
-import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.UUID;
+import net.kyori.adventure.text.Component;
 
 public class FavoritesHeadsMenu extends PaginatedSimplePage {
 
@@ -52,7 +54,7 @@ public class FavoritesHeadsMenu extends PaginatedSimplePage {
                     new PurchaseHeadMenu(plugin, player, head, this).open(player);
                 } else {
                     ItemStack item = head.getItem();
-                    ItemFactoryRegistry.get().giveItem((Player) ctx.event().getWhoClicked(), plugin.getCfg().getOmit(), item);
+                    ItemFactoryRegistry.get().giveItem((Player) ctx.event().getWhoClicked(), plugin.getCfg().getOmit(), plugin.getCfg().isDropOnFullInventory(), item);
                     plugin.getLocalization().sendMessage(player, "purchase.noEconomy",
                             msg -> msg.replaceText(builder -> builder
                                             .matchLiteral("{amount}").replacement(String.valueOf(item.getAmount())))
@@ -91,7 +93,7 @@ public class FavoritesHeadsMenu extends PaginatedSimplePage {
                     return;
                 }
 
-                ItemFactoryRegistry.get().giveItem(player, plugin.getCfg().getOmit(), item);
+                ItemFactoryRegistry.get().giveItem(player, plugin.getCfg().getOmit(), plugin.getCfg().isDropOnFullInventory(), item);
                 Compatibility.playSound(player, plugin.getSoundConfig().get("head.take"));
             }));
         }

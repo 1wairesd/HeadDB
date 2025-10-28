@@ -1,5 +1,12 @@
 package com.github.thesilentpro.headdb.core.menu;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+
 import com.github.thesilentpro.grim.button.SimpleButton;
 import com.github.thesilentpro.grim.gui.GUI;
 import com.github.thesilentpro.grim.page.PaginatedSimplePage;
@@ -7,13 +14,8 @@ import com.github.thesilentpro.headdb.core.HeadDB;
 import com.github.thesilentpro.headdb.core.factory.ItemFactoryRegistry;
 import com.github.thesilentpro.headdb.core.storage.PlayerData;
 import com.github.thesilentpro.headdb.core.util.Compatibility;
-import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.UUID;
+import net.kyori.adventure.text.Component;
 
 public class LocalHeadsMenu extends PaginatedSimplePage {
 
@@ -45,7 +47,7 @@ public class LocalHeadsMenu extends PaginatedSimplePage {
                     return;
                 }
 
-                ItemFactoryRegistry.get().giveItem((Player) ctx.event().getWhoClicked(), plugin.getCfg().getOmit(), item);
+                ItemFactoryRegistry.get().giveItem((Player) ctx.event().getWhoClicked(), plugin.getCfg().getOmit(), plugin.getCfg().isDropOnFullInventory(), item);
                 Compatibility.playSound((Player) ctx.event().getWhoClicked(), plugin.getSoundConfig().get("head.take"));
             }));
         }

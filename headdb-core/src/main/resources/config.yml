@@ -14,7 +14,7 @@ trackPage: true
 showInfoItem: true
 
 # Limits the maximum amount of heads you can buy at once. 2304 is a full inventory of 64 heads.
-# Note that extra heads that do not fit in the inventory are dropped when purchasing.
+# Note that extra heads that do not fit in the inventory are dropped when purchasing if dropOnFullInventory is true.
 maxBuyAmount: 2304
 
 # Head name and lore.
@@ -22,6 +22,8 @@ head:
   # Which lines of the lore should be removed when giving the head to a player.
   # Example: [1,2,3,4,5]
   omit: []
+  # Whether to drop items on the ground if the player's inventory is full
+  dropOnFullInventory: true
   # Configure the name of the heads.
   name:
     # When there is no economy installed this is the name
